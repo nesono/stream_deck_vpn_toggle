@@ -37,7 +37,7 @@ To find your connection name, run in Terminal:
 scutil --nc list
 ```
 
-The name is the quoted string in the output, e.g. `FERN_WIREVPN-Jochen-Issing` or `One-Click VPN (Unifi Identity)`.
+The name is the quoted string in the output, e.g. `VPN` or `One-Click VPN (Unifi Identity)`.
 
 ## Development
 
