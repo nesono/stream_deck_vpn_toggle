@@ -5,9 +5,9 @@
   "Icon": "imgs/plugin-icon",
   "Version": "1.0.0.0",
   "UUID": "com.jochenissing.vpn-toggle",
-  "SDKVersion": 2,
+  "SDKVersion": 3,
   "Software": {
-    "MinimumVersion": "6.4"
+    "MinimumVersion": "6.9"
   },
   "OS": [
     {
@@ -30,7 +30,9 @@
       "Tooltip": "Toggle a VPN connection on or off.",
       "PropertyInspectorPath": "ui/property-inspector.html",
       "DisableAutomaticStates": true,
-      "Controllers": ["Keypad"],
+      "Controllers": [
+        "Keypad"
+      ],
       "States": [
         {
           "Image": "imgs/vpn-disconnected",
