@@ -1,0 +1,4 @@
+node_modules/
+com.jochenissing.vpn-toggle.sdPlugin/bin/
+com.jochenissing.vpn-toggle.sdPlugin/logs/
+*.streamDeckPlugin

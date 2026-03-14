@@ -1,0 +1,48 @@
+{
+  "Author": "Jochen Issing",
+  "Name": "VPN Toggle",
+  "Description": "Toggle macOS VPN connections from your Stream Deck.",
+  "Icon": "imgs/plugin-icon",
+  "Version": "1.0.0.0",
+  "UUID": "com.jochenissing.vpn-toggle",
+  "SDKVersion": 2,
+  "Software": {
+    "MinimumVersion": "6.4"
+  },
+  "OS": [
+    {
+      "Platform": "mac",
+      "MinimumVersion": "12.0"
+    }
+  ],
+  "Nodejs": {
+    "Version": "20",
+    "Debug": "enabled"
+  },
+  "Category": "VPN Toggle",
+  "CategoryIcon": "imgs/plugin-icon",
+  "CodePath": "bin/plugin.js",
+  "Actions": [
+    {
+      "UUID": "com.jochenissing.vpn-toggle.toggle",
+      "Name": "VPN Toggle",
+      "Icon": "imgs/action-icon",
+      "Tooltip": "Toggle a VPN connection on or off.",
+      "PropertyInspectorPath": "ui/property-inspector.html",
+      "DisableAutomaticStates": true,
+      "Controllers": ["Keypad"],
+      "States": [
+        {
+          "Image": "imgs/vpn-disconnected",
+          "TitleAlignment": "bottom",
+          "FontSize": 9
+        },
+        {
+          "Image": "imgs/vpn-connected",
+          "TitleAlignment": "bottom",
+          "FontSize": 9
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>VPN Toggle</title>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-size: 12px;
+        color: #ccc;
+        background: #2d2d2d;
+        margin: 0;
+        padding: 12px;
+      }
+      .sdpi-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+      .sdpi-item-label {
+        flex: 0 0 90px;
+        text-align: right;
+        padding-right: 8px;
+        color: #969696;
+        font-size: 11px;
+      }
+      .sdpi-item-value {
+        flex: 1;
+      }
+      input[type="text"] {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 4px 6px;
+        background: #3b3b3b;
+        border: 1px solid #555;
+        border-radius: 3px;
+        color: #d8d8d8;
+        font-size: 12px;
+      }
+      input[type="text"]:focus {
+        outline: none;
+        border-color: #77f;
+      }
+      .sdpi-info {
+        color: #777;
+        font-size: 10px;
+        line-height: 1.4;
+      }
+      code {
+        background: #3b3b3b;
+        padding: 1px 4px;
+        border-radius: 2px;
+        font-size: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="sdpi-item">
+      <div class="sdpi-item-label">Connection</div>
+      <div class="sdpi-item-value">
+        <input
+          type="text"
+          id="connectionName"
+          placeholder="e.g. My VPN"
+        />
+      </div>
+    </div>
+    <div class="sdpi-item">
+      <div class="sdpi-item-label"></div>
+      <div class="sdpi-item-value">
+        <div class="sdpi-info">
+          Enter the VPN connection name exactly as it appears in
+          <code>scutil --nc list</code> output.
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Stream Deck Property Inspector API
+      let websocket = null;
+      let actionInfo = {};
+      let propertyInspectorUUID = null;
+
+      function connectElgatoStreamDeckSocket(
+        inPort,
+        inPropertyInspectorUUID,
+        inRegisterEvent,
+        inInfo,
+        inActionInfo
+      ) {
+        propertyInspectorUUID = inPropertyInspectorUUID;
+        actionInfo = JSON.parse(inActionInfo);
+
+        websocket = new WebSocket("ws://127.0.0.1:" + inPort);
+
+        websocket.onopen = function () {
+          websocket.send(
+            JSON.stringify({
+              event: inRegisterEvent,
+              uuid: propertyInspectorUUID,
+            })
+          );
+
+          // Request current settings
+          websocket.send(
+            JSON.stringify({
+              event: "getSettings",
+              context: propertyInspectorUUID,
+            })
+          );
+        };
+
+        websocket.onmessage = function (evt) {
+          const data = JSON.parse(evt.data);
+          if (data.event === "didReceiveSettings") {
+            const settings = data.payload.settings || {};
+            document.getElementById("connectionName").value =
+              settings.connectionName || "";
+          }
+        };
+      }
+
+      // Save settings on input change (debounced)
+      let saveTimeout;
+      document
+        .getElementById("connectionName")
+        .addEventListener("input", function () {
+          clearTimeout(saveTimeout);
+          saveTimeout = setTimeout(() => {
+            if (websocket && websocket.readyState === WebSocket.OPEN) {
+              websocket.send(
+                JSON.stringify({
+                  event: "setSettings",
+                  context: propertyInspectorUUID,
+                  payload: {
+                    connectionName: this.value.trim(),
+                  },
+                })
+              );
+            }
+          }, 300);
+        });
+    </script>
+  </body>
+</html>
